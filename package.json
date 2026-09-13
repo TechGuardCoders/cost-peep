@@ -1,0 +1,32 @@
+{
+  "name": "cost-peep",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cost-per-token dashboard: TTFT, ITL, GPU utilization and $/1M tokens by model, tenant and route for a self-hosted inference cluster.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "next": "14.2.15",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "recharts": "2.12.7"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.15",
+    "@types/react": "18.3.4",
+    "@types/react-dom": "18.3.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "8.57.0",
+    "eslint-config-next": "14.2.15",
+    "postcss": "^8.4.41",
+    "tailwindcss": "^3.4.10",
+    "typescript": "5.5.4",
+    "vitest": "2.0.5"
+  }
+}

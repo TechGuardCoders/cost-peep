@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #f8fafc;
+  --bg-card: #ffffff;
+  --border: #e2e8f0;
+  --fg: #0f172a;
+  --fg-muted: #64748b;
+  --accent: #0ea5e9;
+  --accent-soft: rgba(14, 165, 233, 0.08);
+  --hover-glow: rgba(14, 165, 233, 0.12);
+  --squared-radius: 4px;
+  --rounded-radius: 16px;
+}
+
+.dark {
+  --bg: #020617;
+  --bg-card: #0f172a;
+  --border: #1e293b;
+  --fg: #f1f5f9;
+  --fg-muted: #94a3b8;
+  --accent: #38bdf8;
+  --accent-soft: rgba(56, 189, 248, 0.08);
+  --hover-glow: rgba(56, 189, 248, 0.1);
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--fg);
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+* {
+  border-color: var(--border);
+}
+
+/* ---------- KPI cards ---------- */
+
+.kpi-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 1.25rem 1.5rem;
+  cursor: default;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease;
+  overflow: hidden;
+}
+
+.kpi-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    600px circle at var(--mx, 50%) var(--my, 50%),
+    var(--hover-glow),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.kpi-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow:
+    0 12px 40px -12px var(--hover-glow),
+    0 0 0 1px var(--accent-soft);
+}
+
+.kpi-card:hover::before {
+  opacity: 1;
+}
+
+/* Squared variant — used on select cards, not throughout */
+.kpi-card.squared {
+  border-radius: var(--squared-radius);
+}
+
+.kpi-card.rounded {
+  border-radius: var(--rounded-radius);
+}
+
+.kpi-value {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--fg) 60%, var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.kpi-label {
+  color: var(--fg-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ---------- panels ---------- */
+
+.panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--rounded-radius);
+  padding: 1.25rem 1.5rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.panel:hover {
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+}
+
+/* ---------- scrollbars ---------- */
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--fg-muted); }
+
+/* ---------- entrance animation ---------- */
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.rise {
+  animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.rise-1 { animation-delay: 0.05s; }
+.rise-2 { animation-delay: 0.12s; }
+.rise-3 { animation-delay: 0.19s; }
+.rise-4 { animation-delay: 0.26s; }
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.live-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
