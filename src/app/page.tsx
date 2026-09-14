@@ -96,51 +96,62 @@ function dateFmt(ts: number): string {
 
 /* ---------------- googly title ---------------- */
 
-/** Title where the two lowercase e's in "Peep" are googly eyes.
- * Idle: pupils wander slowly. Hover: pupils track the cursor. */
-function GooglyTitle() {
-  const titleRef = useRef<HTMLSpanElement>(null);
+/* ---------------- title + peeping eyes ---------------- */
+
+/** "CO$T PEEP" wordmark; beneath it, two googly eyes peep over a line
+ * (hiding -> peeking on a loop). Hover the stage: pupils track cursor. */
+function PeepTitle() {
+  const stageRef = useRef<HTMLDivElement>(null);
 
   const onMouseMove = useCallback((e: React.MouseEvent) => {
-    const el = titleRef.current;
+    const el = stageRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    const angle = Math.atan2(e.clientY - cy, e.clientX - cx);
-    const dist = 0.09; // em-ish travel via CSS em unit on transform
-    const dx = Math.cos(angle) * dist;
-    const dy = Math.sin(angle) * dist;
+    const angle = Math.atan2(
+      e.clientY - (rect.top + rect.height / 2),
+      e.clientX - (rect.left + rect.width / 2)
+    );
+    const dx = Math.cos(angle) * 4;
+    const dy = Math.sin(angle) * 3;
     for (const pupil of el.querySelectorAll<HTMLElement>(".pupil")) {
-      pupil.style.transform = `translate(calc(-50% + ${dx}em), calc(-50% + ${dy}em))`;
+      pupil.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
     }
   }, []);
 
   const onMouseLeave = useCallback(() => {
-    const el = titleRef.current;
+    const el = stageRef.current;
     if (!el) return;
     for (const pupil of el.querySelectorAll<HTMLElement>(".pupil")) {
-      pupil.style.transform = ""; // resume CSS wander animation
+      pupil.style.transform = ""; // resume the glance animation
     }
   }, []);
 
   return (
-    <span
-      ref={titleRef}
-      className="googly-title display-font text-3xl md:text-4xl font-semibold"
+    <div
+      ref={stageRef}
+      className="flex flex-col items-center select-none"
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
       title="Peek-a-boo."
     >
-      Cost&nbsp;
-      <span className="googly-e">
-        e<span className="eye"><span className="pupil left-pupil" /></span>
+      <span className="display-font text-4xl md:text-5xl font-bold tracking-tight">
+        CO$T PEEP
       </span>
-      <span className="googly-e">
-        e<span className="eye"><span className="pupil right-pupil" /></span>
-      </span>
-      p
-    </span>
+      <div className="peep-stage w-64">
+        {/* the wall */}
+        <div className="peep-line" />
+        {/* left peeper: a pair of eyes */}
+        <div className="peeper left">
+          <span className="eye"><span className="pupil left-pupil" /></span>
+          <span className="eye"><span className="pupil left-pupil" /></span>
+        </div>
+        {/* right peeper: a pair of eyes, out of phase */}
+        <div className="peeper right">
+          <span className="eye"><span className="pupil right-pupil" /></span>
+          <span className="eye"><span className="pupil right-pupil" /></span>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -267,7 +278,7 @@ export default function Home() {
     <main className="min-h-screen w-full px-4 py-6 md:px-8 lg:px-10">
       {/* header — centered title, subtitle beneath */}
       <header className="flex flex-col items-center mb-6 rise">
-        <GooglyTitle />
+        <PeepTitle />
         <p className="text-sm mt-2" style={{ color: "var(--fg-muted)" }}>
           Diag. Center: TTFT · ITL · GPU · $/1M tokens · {dateFmt(now)}{" "}
           <span className="live-word" style={{ color: "var(--accent)" }}>
