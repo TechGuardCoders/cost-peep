@@ -25,7 +25,7 @@ serving telemetry.
 | Tables | by tenant, by model, by route | aggregation from labeled counters |
 
 Timestamps render in the **America/New_York (Eastern)** timezone as
-`DD/MM/YYYY HH:MM:SS`.
+`MM/DD/YYYY HH:MM:SS`.
 
 ## The cost model
 
