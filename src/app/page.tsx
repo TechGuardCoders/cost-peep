@@ -50,16 +50,18 @@ function PoweredBy() {
       href="https://techguard.io"
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex items-center gap-2 hover:opacity-80 transition-opacity"
+      className="inline-flex flex-col items-center gap-1 hover:opacity-85 transition-opacity"
       title="Tech Guard — engineering & security under one roof"
     >
-      <span className="kpi-label">POWERED BY</span>
+      <span className="text-[10px] tracking-[0.3em] font-medium" style={{ color: "var(--fg-muted)" }}>
+        POWERED BY
+      </span>
       {/* light theme -> dark logo; dark theme -> white logo */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={dark ? "/tg-logo-light.svg" : "/tg-logo-dark.svg"}
         alt="Tech Guard"
-        className="h-5 w-auto"
+        className="h-16 w-auto"
       />
     </a>
   );
@@ -87,9 +89,9 @@ function timeFmt(ts: number): string {
   return new Intl.DateTimeFormat("en-GB", TIME_OPTS).format(new Date(ts));
 }
 
-/** DD/MM/YYYY in Eastern. */
+/** MM/DD/YYYY in Eastern. */
 function dateFmt(ts: number): string {
-  return new Intl.DateTimeFormat("en-GB", DATE_OPTS).format(new Date(ts));
+  return new Intl.DateTimeFormat("en-US", DATE_OPTS).format(new Date(ts));
 }
 
 /* ---------------- KPI card ---------------- */
@@ -470,13 +472,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* footer */}
-      <footer className="mt-8 flex items-center justify-between text-xs" style={{ color: "var(--fg-muted)" }}>
-        <span>
+      {/* footer — centered branding strip */}
+      <footer className="mt-10 flex flex-col items-center gap-3 pb-4">
+        <PoweredBy />
+        <div className="text-xs" style={{ color: "var(--fg-muted)" }}>
           Reads vLLM /metrics read-only · assumptions editable via POST /api/assumptions ·{" "}
           {dateFmt(now)} {timeFmt(now)} ET
-        </span>
-        <PoweredBy />
+        </div>
       </footer>
     </main>
   );
