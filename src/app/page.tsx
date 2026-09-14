@@ -134,15 +134,12 @@ function GooglyTitle() {
     >
       Cost&nbsp;
       <span className="googly-e">
-        p
-        <span className="eye left"><span className="pupil left-pupil" /></span>
-        <span className="eye right"><span className="pupil right-pupil" /></span>
+        e<span className="eye"><span className="pupil left-pupil" /></span>
       </span>
       <span className="googly-e">
-        p
-        <span className="eye left"><span className="pupil left-pupil" /></span>
-        <span className="eye right"><span className="pupil right-pupil" /></span>
+        e<span className="eye"><span className="pupil right-pupil" /></span>
       </span>
+      p
     </span>
   );
 }
