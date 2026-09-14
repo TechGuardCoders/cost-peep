@@ -103,16 +103,18 @@ docker run -p 3000:3000 \
   cost-peep                                                         # live
 ```
 
-### 4. Vercel (one click)
+### 4. Docker on any always-on box
 
-Deploy with the button or `vercel` CLI. The hosted deployment runs in mock
-mode by default (set in `vercel.json`), which makes the project clickable
-from the repo README with zero credentials. To run a live Vercel deployment
-against a cloud-reachable vLLM endpoint, set `COST_PEEP_MODE=live` and
-`VLLM_BASE_URL` in the Vercel project settings.
+```bash
+docker build -t cost-peep .
+docker run -d -p 3000:3000 --restart unless-stopped \
+  -e COST_PEEP_MODE=live \
+  -e VLLM_BASE_URL=http://your-vllm-host:8000 \
+  cost-peep
+```
 
-> A LAN-only cluster (like ours) is not reachable from a public Vercel
-> deployment. Live-from-cloud requires either exposing the endpoint through
+> A LAN-only cluster (like ours) is not reachable from a public cloud host.
+> Live-from-cloud requires either exposing the endpoint through
 > an authenticated proxy or running the collector on the same network / VPN
 > mesh as the cluster.
 
