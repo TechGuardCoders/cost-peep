@@ -135,36 +135,72 @@ html, body {
   letter-spacing: -0.03em;
 }
 
-/* ---------- googly eyes ---------- */
+/* ---------- googly eyes (peeping over a line under the title) ---------- */
 
-.googly-title {
-  display: inline-flex;
-  align-items: baseline;
-}
-
-.googly-e {
+.peep-stage {
   position: relative;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.4rem;
+  height: 58px; /* room for eyes above the line + hiding below */
+  overflow: hidden; /* they genuinely hide behind the line edge */
 }
 
-/* One eye per 'e', centered on the letter's counter (the enclosed bowl).
-   Sclera takes the page background so it blends in dark mode too — no
-   contrasting box, just a subtle ring and a dark pupil. */
-.googly-e .eye {
+/* The "wall" they peep over */
+.peep-line {
   position: absolute;
-  top: 0.14em;
+  bottom: 12px;
   left: 50%;
-  width: 0.58em;
-  height: 0.58em;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 10px;
+  border-radius: 5px;
+  background: var(--fg-muted);
+  opacity: 0.85;
+}
+
+/* Each peeper: two eyes grouped, sitting below the line, rising to peek */
+.peeper {
+  position: absolute;
+  bottom: 14px;
+  display: flex;
+  gap: 7px;
+  transition: transform 0.6s cubic-bezier(0.34, 1.3, 0.64, 1);
+  z-index: 1;
+}
+
+.peeper.left  { left: calc(50% - 46px); animation: peek-left 7s ease-in-out infinite; }
+.peeper.right { left: calc(50% + 14px); animation: peek-right 9s ease-in-out infinite; }
+
+/* hiding -> peeking keyframes; transform-only so it stays cheap */
+@keyframes peek-left {
+  0%, 38%  { transform: translateY(26px); }   /* hidden behind the line */
+  48%, 78% { transform: translateY(-8px); }   /* eyes up over the line */
+  88%      { transform: translateY(6px); }    /* start sinking back */
+  100%     { transform: translateY(26px); }
+}
+@keyframes peek-right {
+  0%, 48%  { transform: translateY(26px); }
+  58%, 82% { transform: translateY(-8px); }
+  90%      { transform: translateY(4px); }
+  100%     { transform: translateY(26px); }
+}
+
+/* The eye itself: page-background sclera + muted ring + dark pupil.
+   Theme-neutral: no white box in dark mode. */
+.peeper .eye {
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
   background: var(--bg);
   border: 1.5px solid var(--fg-muted);
-  transform: translateX(-50%);
   overflow: hidden;
+  position: relative;
   pointer-events: auto;
 }
 
-.googly-e .pupil {
+.peeper .pupil {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -177,21 +213,19 @@ html, body {
   will-change: transform;
 }
 
-/* idle wander when not hovered */
-@keyframes wander {
-  0%   { transform: translate(-50%, -50%) translate(0.08em, -0.05em); }
-  20%  { transform: translate(-50%, -50%) translate(-0.07em, 0.06em); }
-  45%  { transform: translate(-50%, -50%) translate(0.05em, 0.07em); }
-  70%  { transform: translate(-50%, -50%) translate(-0.06em, -0.04em); }
-  100% { transform: translate(-50%, -50%) translate(0.08em, -0.05em); }
+/* idle glance while peeking (when title not hovered) */
+@keyframes glance {
+  0%   { transform: translate(-50%, -50%) translate(2px, -1px); }
+  30%  { transform: translate(-50%, -50%) translate(-2px, 1px); }
+  60%  { transform: translate(-50%, -50%) translate(2px, 1px); }
+  100% { transform: translate(-50%, -50%) translate(2px, -1px); }
 }
 
-.googly-title:not(:hover) .pupil {
-  animation: wander 5s ease-in-out infinite;
+.peep-stage:not(:hover) .pupil {
+  animation: glance 3.2s ease-in-out infinite;
 }
-
-.googly-title:not(:hover) .pupil.right-pupil {
-  animation-delay: -0.35s; /* slightly out of phase = alive */
+.peep-stage:not(:hover) .peeper.right .pupil {
+  animation-delay: -0.8s;
 }
 
 /* ---------- scrollbars ---------- */
