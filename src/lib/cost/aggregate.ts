@@ -118,14 +118,18 @@ export function appendTrendPoint(
   const tps =
     (Math.max(0, current.generationTokensTotal - (prev?.generationTokensTotal ?? 0))) / dtSec;
 
+  // Rolling average: caller passes cumulative totals at the window start via
+  // windowStart {ts, genTokens}. Computed in store.ts where that state lives.
   const point: TrendPoint = {
     ts: current.ts,
     ttftP50: current.ttftHistogram.p50,
     ttftP95: current.ttftHistogram.p95,
     itlP50: current.itlHistogram.p50,
     tokensPerSec: tps,
+    tokensPerSecAvg: null,
     gpuUtil: current.gpuUtil,
     costPer1M: cost.costPer1MTokens,
+    concurrent: current.numRequestsRunning,
   };
   const next = [...trends, point];
   return next.slice(-maxPoints);

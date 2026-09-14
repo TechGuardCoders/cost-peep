@@ -143,10 +143,25 @@ html, body {
 .rise-4 { animation-delay: 0.26s; }
 
 @keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.8); }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
 }
 
 .live-dot {
   animation: pulse-dot 2s ease-in-out infinite;
 }
+
+/* Blink the entire LIVE word, not a dot — subtle 1.4s breathing. */
+.live-word {
+  animation: pulse-dot 1.4s ease-in-out infinite;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Recharts render animation only on KPI hover (class added by JS). */
+.chart-still .recharts-line,
+.chart-still .recharts-area,
+.chart-still .recharts-bar {
+  animation: none !important;
+}
+
+.kpi-card .chart-still { transition: opacity 0.3s ease; }

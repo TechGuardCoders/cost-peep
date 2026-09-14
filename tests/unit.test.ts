@@ -76,6 +76,7 @@ describe("cost engine", () => {
       itlHistogram: { bounds: [], counts: [], p50: null, p95: null, p99: null },
       gpuUtil: 0.5, kvCacheUsage: 0.3,
       requestsTotal: 10, requestsFailedTotal: 0, families: [],
+      numRequestsRunning: 0, numRequestsWaiting: 0,
     };
     const first = { ...base, ts: Date.now(), source: "mock" as const,
       promptTokensTotal: 1000, generationTokensTotal: 4000 };

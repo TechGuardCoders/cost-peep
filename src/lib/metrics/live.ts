@@ -83,6 +83,17 @@ export async function fetchLiveSnapshot(cfg: LiveSourceConfig): Promise<MetricsS
     const kv = findFamily(families, "vllm:kv_cache_usage_perc");
     const kvCacheUsage = kv && kv.samples[0] ? kv.samples[0].value : null;
 
+    // Concurrency gauges: running + waiting. Averaged across engines if
+    // multiple (single-engine deployments have exactly one sample).
+    const runningFam = findFamily(families, "vllm:num_requests_running");
+    const waitingFam = findFamily(families, "vllm:num_requests_waiting");
+    const avgOf = (fam: ReturnType<typeof findFamily>): number | null => {
+      if (!fam || fam.samples.length === 0) return null;
+      return fam.samples.reduce((a, s) => a + s.value, 0) / fam.samples.length;
+    };
+    const numRequestsRunning = avgOf(runningFam);
+    const numRequestsWaiting = avgOf(waitingFam);
+
     const promptTokens = sumFamily(findFamily(families, "vllm:prompt_tokens_total"));
     const generationTokens = sumFamily(findFamily(families, "vllm:generation_tokens_total"));
     const requests = sumFamily(
@@ -106,6 +117,8 @@ export async function fetchLiveSnapshot(cfg: LiveSourceConfig): Promise<MetricsS
       generationTokensTotal: generationTokens,
       requestsTotal: requests,
       requestsFailedTotal: failed,
+      numRequestsRunning,
+      numRequestsWaiting,
       families,
     };
   } finally {
