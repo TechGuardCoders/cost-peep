@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import {
   ResponsiveContainer, LineChart, Line, AreaChart, Area, BarChart, Bar,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell,
@@ -92,6 +92,59 @@ function timeFmt(ts: number): string {
 /** MM/DD/YYYY in Eastern. */
 function dateFmt(ts: number): string {
   return new Intl.DateTimeFormat("en-US", DATE_OPTS).format(new Date(ts));
+}
+
+/* ---------------- googly title ---------------- */
+
+/** Title where the two lowercase e's in "Peep" are googly eyes.
+ * Idle: pupils wander slowly. Hover: pupils track the cursor. */
+function GooglyTitle() {
+  const titleRef = useRef<HTMLSpanElement>(null);
+
+  const onMouseMove = useCallback((e: React.MouseEvent) => {
+    const el = titleRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const angle = Math.atan2(e.clientY - cy, e.clientX - cx);
+    const dist = 0.09; // em-ish travel via CSS em unit on transform
+    const dx = Math.cos(angle) * dist;
+    const dy = Math.sin(angle) * dist;
+    for (const pupil of el.querySelectorAll<HTMLElement>(".pupil")) {
+      pupil.style.transform = `translate(calc(-50% + ${dx}em), calc(-50% + ${dy}em))`;
+    }
+  }, []);
+
+  const onMouseLeave = useCallback(() => {
+    const el = titleRef.current;
+    if (!el) return;
+    for (const pupil of el.querySelectorAll<HTMLElement>(".pupil")) {
+      pupil.style.transform = ""; // resume CSS wander animation
+    }
+  }, []);
+
+  return (
+    <span
+      ref={titleRef}
+      className="googly-title display-font text-3xl md:text-4xl font-semibold"
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      title="Peek-a-boo."
+    >
+      Cost&nbsp;
+      <span className="googly-e">
+        p
+        <span className="eye left"><span className="pupil left-pupil" /></span>
+        <span className="eye right"><span className="pupil right-pupil" /></span>
+      </span>
+      <span className="googly-e">
+        p
+        <span className="eye left"><span className="pupil left-pupil" /></span>
+        <span className="eye right"><span className="pupil right-pupil" /></span>
+      </span>
+    </span>
+  );
 }
 
 /* ---------------- KPI card ---------------- */
@@ -215,16 +268,16 @@ export default function Home() {
 
   return (
     <main className="min-h-screen w-full px-4 py-6 md:px-8 lg:px-10">
-      {/* header */}
-      <header className="flex items-center justify-between mb-6 rise">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Cost Peep</h1>
-          <p className="text-sm mt-1" style={{ color: "var(--fg-muted)" }}>
-            Diagnostic center — TTFT · ITL · GPU · $/1M tokens · Eastern{" "}
-            {dateFmt(now)} {timeFmt(now)} ET
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
+      {/* header — centered title, subtitle beneath */}
+      <header className="flex flex-col items-center mb-6 rise">
+        <GooglyTitle />
+        <p className="text-sm mt-2" style={{ color: "var(--fg-muted)" }}>
+          Diag. Center: TTFT · ITL · GPU · $/1M tokens · {dateFmt(now)}{" "}
+          <span className="live-word" style={{ color: "var(--accent)" }}>
+            {timeFmt(now)} EST
+          </span>
+        </p>
+        <div className="flex items-center gap-3 mt-3">
           <span
             className="text-xs px-2.5 py-1 rounded-full border"
             style={{ borderColor: "var(--border)" }}
