@@ -31,6 +31,10 @@ export interface MetricsSnapshot {
   generationTokensTotal: number;
   requestsTotal: number;
   requestsFailedTotal: number;
+  /** Currently executing requests (vllm:num_requests_running gauge). */
+  numRequestsRunning: number | null;
+  /** Requests queued waiting for capacity (vllm:num_requests_waiting gauge). */
+  numRequestsWaiting: number | null;
   /** Raw families for anything the UI wants beyond the curated fields. */
   families: import("./prometheus/parse").MetricFamily[];
 }
@@ -107,8 +111,10 @@ export interface TrendPoint {
   ttftP95: number | null;
   itlP50: number | null;
   tokensPerSec: number;
+  tokensPerSecAvg: number | null;
   gpuUtil: number | null;
   costPer1M: number | null;
+  concurrent: number | null;
 }
 
 /** Full payload the dashboard API returns. */
@@ -123,6 +129,12 @@ export interface DashboardPayload {
     failedTotal: number;
     source: "live" | "mock";
     uptimeSec: number | null;
+    /** Avg tokens/sec over the current trend window. */
+    tokensPerSecAvg: number | null;
+    /** Currently running requests on the engine. */
+    numRequestsRunning: number | null;
+    /** Requests waiting in queue. */
+    numRequestsWaiting: number | null;
   };
   tenants: TenantBreakdown[];
   models: ModelBreakdown[];

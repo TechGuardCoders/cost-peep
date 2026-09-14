@@ -24,6 +24,8 @@ interface Store {
   assumptions: CostAssumptions;
   /** True when the current snapshot is the first from the live source. */
   firstLiveSeen: boolean;
+  /** Cumulative gen tokens + ts at the start of the trend window. */
+  windowStart: { ts: number; genTokens: number } | null;
 }
 
 const g = globalThis as unknown as { __costPeepStore?: Store };
@@ -34,6 +36,7 @@ if (!g.__costPeepStore) {
     trends: [],
     assumptions: { ...DEFAULT_ASSUMPTIONS },
     firstLiveSeen: false,
+    windowStart: null,
   };
 }
 const store = g.__costPeepStore;
@@ -58,8 +61,30 @@ export function pushSnapshot(snap: MetricsSnapshot): void {
   store.previous = store.current;
   store.current = snap;
 
+  // Establish/reset the trend window on source transitions.
+  if (snap.source === "live" && !store.firstLiveSeen) {
+    store.windowStart = null;
+    store.firstLiveSeen = true;
+  }
+  if (!store.windowStart) {
+    store.windowStart = { ts: snap.ts, genTokens: snap.generationTokensTotal };
+  }
+
   const cost = computeCostWindow(snap, store.previous, store.assumptions);
-  store.trends = appendTrendPoint(store.trends, snap, store.previous, cost);
+  const trends = appendTrendPoint(store.trends, snap, store.previous, cost);
+
+  // Fill in the rolling avg on the newest point: cumulative tokens since
+  // window start / elapsed. First point of a window has no elapsed time.
+  const ws = store.windowStart;
+  if (ws) {
+    const elapsed = (snap.ts - ws.ts) / 1000;
+    const last = trends[trends.length - 1];
+    if (last && elapsed > 0.5) {
+      last.tokensPerSecAvg = Math.max(0, snap.generationTokensTotal - ws.genTokens) / elapsed;
+    }
+  }
+
+  store.trends = trends;
 }
 
 /** Seed the store with mock data (dev/demo/CI). */
@@ -83,6 +108,7 @@ export function buildPayload(): DashboardPayload {
       current: {
         ttft: null, itl: null, gpuUtil: null, kvCacheUsage: null,
         cost: null, requestsTotal: 0, failedTotal: 0, source: "mock", uptimeSec: null,
+        tokensPerSecAvg: null, numRequestsRunning: null, numRequestsWaiting: null,
       },
       tenants: [], models: [], routes: [], trends: [],
     };
@@ -99,6 +125,11 @@ export function buildPayload(): DashboardPayload {
       failedTotal: current.requestsFailedTotal,
       source: current.source,
       uptimeSec: null,
+      tokensPerSecAvg: store.trends.length > 1
+        ? (store.trends[store.trends.length - 1]?.tokensPerSecAvg ?? null)
+        : null,
+      numRequestsRunning: current.numRequestsRunning,
+      numRequestsWaiting: current.numRequestsWaiting,
     },
     tenants: tenantBreakdowns(current, previous, cost),
     models: modelBreakdowns(current, previous, cost),

@@ -57,6 +57,10 @@ export function nextMockSnapshot(prev: MetricsSnapshot | null): MetricsSnapshot 
   const newPrompt = Math.floor(tokRate * dtSec * 2.6);
   const newReq = Math.floor((tokRate / 180) * dtSec * jitter(1, 0.3));
 
+  // Simulated concurrency: 0-3 running (peaks with load), occasionally queued.
+  const running = Math.max(0, Math.round(load * 4 + (Math.random() - 0.5) * 2));
+  const waiting = Math.random() < 0.12 ? Math.floor(Math.random() * 3) : 0;
+
   counterState = {
     promptTokens: counterState.promptTokens + newPrompt,
     generationTokens: counterState.generationTokens + newGen,
@@ -75,6 +79,8 @@ export function nextMockSnapshot(prev: MetricsSnapshot | null): MetricsSnapshot 
     generationTokensTotal: counterState.generationTokens,
     requestsTotal: counterState.requests,
     requestsFailedTotal: counterState.failed,
+    numRequestsRunning: running,
+    numRequestsWaiting: waiting,
     families: [],
   };
 }
