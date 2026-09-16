@@ -147,43 +147,45 @@ html, body {
   overflow: hidden; /* they genuinely hide behind the line edge */
 }
 
-/* The "wall" they peep over */
+/* The "wall" they peep over — skinny rectangle; eyes rise above its top edge */
 .peep-line {
   position: absolute;
-  bottom: 12px;
+  bottom: 26px;
   left: 50%;
   transform: translateX(-50%);
   width: 140px;
-  height: 22px;
+  height: 5px;
   background: var(--fg-muted);
   opacity: 0.85;
 }
 
-/* Each peeper: two eyes grouped, sitting below the line, rising to peek */
+/* Each peeper: two eyes grouped, sitting below the line, rising to peek.
+   Rest position fully below the 5px ledge (which sits at bottom:26px); the
+   peek keyframe lifts them so the eyes clear ABOVE the ledge's top edge. */
 .peeper {
   position: absolute;
-  bottom: 14px;
+  bottom: 0px;
   display: flex;
   gap: 7px;
   transition: transform 0.6s cubic-bezier(0.34, 1.3, 0.64, 1);
-  z-index: 1;
+  z-index: 0;
 }
 
 .peeper.left  { left: calc(50% - 46px); animation: peek-left 7s ease-in-out infinite; }
 .peeper.right { left: calc(50% + 14px); animation: peek-right 9s ease-in-out infinite; }
 
-/* hiding -> peeking keyframes; transform-only so it stays cheap */
+/* hiding (below ledge) -> peeking (fully above ledge top edge) */
 @keyframes peek-left {
-  0%, 38%  { transform: translateY(26px); }   /* hidden behind the line */
-  48%, 78% { transform: translateY(-8px); }   /* eyes up over the line */
-  88%      { transform: translateY(6px); }    /* start sinking back */
-  100%     { transform: translateY(26px); }
+  0%, 38%  { transform: translateY(0px); }    /* hidden: below the ledge */
+  48%, 78% { transform: translateY(-30px); }  /* peeking: eyes above ledge */
+  88%      { transform: translateY(-16px); }  /* start sinking back */
+  100%     { transform: translateY(0px); }
 }
 @keyframes peek-right {
-  0%, 48%  { transform: translateY(26px); }
-  58%, 82% { transform: translateY(-8px); }
-  90%      { transform: translateY(4px); }
-  100%     { transform: translateY(26px); }
+  0%, 48%  { transform: translateY(0px); }
+  58%, 82% { transform: translateY(-30px); }
+  90%      { transform: translateY(-18px); }
+  100%     { transform: translateY(0px); }
 }
 
 /* The eye itself: FIXED colors in both themes — white sclera, dark pupil,
