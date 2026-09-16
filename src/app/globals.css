@@ -154,8 +154,7 @@ html, body {
   left: 50%;
   transform: translateX(-50%);
   width: 140px;
-  height: 10px;
-  border-radius: 5px;
+  height: 22px;
   background: var(--fg-muted);
   opacity: 0.85;
 }
@@ -187,14 +186,14 @@ html, body {
   100%     { transform: translateY(26px); }
 }
 
-/* The eye itself: page-background sclera + muted ring + dark pupil.
-   Theme-neutral: no white box in dark mode. */
+/* The eye itself: FIXED colors in both themes — white sclera, dark pupil,
+   dark ring. Never inverts in dark mode (googly eyes are googly eyes). */
 .peeper .eye {
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  background: var(--bg);
-  border: 1.5px solid var(--fg-muted);
+  background: #ffffff;
+  border: 1.5px solid #1e293b;
   overflow: hidden;
   position: relative;
   pointer-events: auto;
@@ -207,7 +206,7 @@ html, body {
   width: 46%;
   height: 46%;
   border-radius: 50%;
-  background: var(--fg);
+  background: #0f172a;
   transform: translate(-50%, -50%);
   transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
   will-change: transform;
