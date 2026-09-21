@@ -1,7 +1,7 @@
 @echo off
 REM Cost Peep launcher - LAN-bound, live mode.
 REM Serves the dashboard on http://<this-PC-LAN-IP>:3000 so anyone on the
-REM network (e.g. Tenant B) can open it in a browser. Read-only toward the
+REM network (e.g. another tenant) can open it in a browser. Read-only toward the
 REM Spark cluster: only GETs /metrics.
 
 cd /d "%~dp0"
