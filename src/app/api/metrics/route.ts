@@ -9,15 +9,15 @@ export const dynamic = "force-dynamic";
  * GET /api/metrics — current dashboard payload.
  *
  * Mode selection:
- *   COST_PEEP_MODE=live  → scrape vLLM /metrics each poll (read-only GET)
- *   COST_PEEP_MODE=mock  → simulated telemetry (default; CI/demo safe)
+ *   POCKET_WATCH_MODE=live  → scrape vLLM /metrics each poll (read-only GET)
+ *   POCKET_WATCH_MODE=mock  → simulated telemetry (default; CI/demo safe)
  *
  * Live failures fall back to the last good snapshot; the payload reports its
  * source so the UI can show a stale/live badge honestly.
  */
 export async function GET() {
   ensureData();
-  const mode = process.env.COST_PEEP_MODE ?? "mock";
+  const mode = process.env.POCKET_WATCH_MODE ?? "mock";
   const base = process.env.VLLM_BASE_URL;
   const apiKey = process.env.VLLM_API_KEY;
 

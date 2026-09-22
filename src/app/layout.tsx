@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Cost Peep — Inference FinOps",
+  title: "Pocket Watching — Inference FinOps",
   description:
     "Cost-per-token dashboard: TTFT, ITL, GPU utilization and $/1M tokens by model, tenant and route.",
 };

@@ -96,11 +96,11 @@ function dateFmt(ts: number): string {
 
 /* ---------------- googly title ---------------- */
 
-/* ---------------- title + peeping eyes ---------------- */
+/* ---------------- title + watching eyes ---------------- */
 
-/** "CO$T PEEP" wordmark; beneath it, two googly eyes peep over a line
+/** "POCKET WATCHING" wordmark; beneath it, two googly eyes peep over a line
  * (hiding -> peeking on a loop). Hover the stage: pupils track cursor. */
-function PeepTitle() {
+function WatchingTitle() {
   const stageRef = useRef<HTMLDivElement>(null);
 
   const onMouseMove = useCallback((e: React.MouseEvent) => {
@@ -135,7 +135,7 @@ function PeepTitle() {
       title="Peek-a-boo."
     >
       <span className="display-font text-4xl md:text-5xl font-bold tracking-tight">
-        CO$T PEEP
+        POCKET WATCHING
       </span>
       <div className="peep-stage w-64">
         {/* the wall */}
@@ -278,7 +278,7 @@ export default function Home() {
     <main className="min-h-screen w-full px-4 py-6 md:px-8 lg:px-10">
       {/* header — centered title, subtitle beneath */}
       <header className="flex flex-col items-center mb-6 rise">
-        <PeepTitle />
+        <WatchingTitle />
         <p className="text-sm mt-2" style={{ color: "var(--fg-muted)" }}>
           Diag. Center: TTFT · ITL · GPU · $/1M tokens · {dateFmt(now)}{" "}
           <span className="live-word" style={{ color: "var(--accent)" }}>

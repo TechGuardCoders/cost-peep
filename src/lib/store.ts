@@ -28,9 +28,9 @@ interface Store {
   windowStart: { ts: number; genTokens: number } | null;
 }
 
-const g = globalThis as unknown as { __costPeepStore?: Store };
-if (!g.__costPeepStore) {
-  g.__costPeepStore = {
+const g = globalThis as unknown as { __pocketWatchStore?: Store };
+if (!g.__pocketWatchStore) {
+  g.__pocketWatchStore = {
     current: null,
     previous: null,
     trends: [],
@@ -39,7 +39,7 @@ if (!g.__costPeepStore) {
     windowStart: null,
   };
 }
-const store = g.__costPeepStore;
+const store = g.__pocketWatchStore;
 
 export function getAssumptions(): CostAssumptions {
   return store.assumptions;

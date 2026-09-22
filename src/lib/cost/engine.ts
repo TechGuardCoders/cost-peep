@@ -1,6 +1,6 @@
 /**
  * Cost engine: turn serving metrics + power/hardware assumptions into
- * $/1M tokens. This is the FinOps core of Cost Peep.
+ * $/1M tokens. This is the FinOps core of Pocket Watching.
  *
  * The model:
  *   Running the cluster costs money every hour whether tokens flow or not.

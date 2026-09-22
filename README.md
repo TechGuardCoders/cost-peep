@@ -1,18 +1,18 @@
-# Cost Peep
+# Pocket Watching
 
 **Cost-per-token dashboard for a self-hosted inference cluster.**
 
 TTFT, ITL, GPU utilization and **$/1M tokens** by model, tenant and route.
 Because infra without FinOps is just expensive uptime.
 
-![CI](https://github.com/TechGuardCoders/cost-peep/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/TechGuardCoders/pocket-watching/actions/workflows/ci.yml/badge.svg)
 
 ## Why
 
 GPU clusters bill by the hour; users by the token. Between those two numbers
 lives every infrastructure decision that matters: how much a request really
 costs, which tenant is burning money, and whether an optimization actually
-paid. Cost Peep makes that number visible, continuously, against real
+paid. Pocket Watching makes that number visible, continuously, against real
 serving telemetry.
 
 ## What it shows
@@ -68,7 +68,7 @@ All assumptions are editable at runtime: `POST /api/assumptions`
 
 ## Universal by design
 
-Cost Peep is not tied to one cluster. It works against **any vLLM
+Pocket Watching is not tied to one cluster. It works against **any vLLM
 deployment** (or anything else serving Prometheus exposition format), and
 runs anywhere Node runs:
 
@@ -85,7 +85,7 @@ hosted demo runs.
 ### 2. Run locally (live mode, against your cluster)
 
 ```bash
-COST_PEEP_MODE=live VLLM_BASE_URL=http://your-vllm-host:8000 npm run dev
+POCKET_WATCH_MODE=live VLLM_BASE_URL=http://your-vllm-host:8000 npm run dev
 ```
 
 Point `VLLM_BASE_URL` at any reachable vLLM server. The `/metrics` endpoint
@@ -95,22 +95,22 @@ generating inference load with `scripts/generate_load.py`).
 ### 3. Docker
 
 ```bash
-docker build -t cost-peep .
-docker run -p 3000:3000 cost-peep                                   # mock
+docker build -t pocket-watching .
+docker run -p 3000:3000 pocket-watching                                   # mock
 docker run -p 3000:3000 \
-  -e COST_PEEP_MODE=live \
+  -e POCKET_WATCH_MODE=live \
   -e VLLM_BASE_URL=http://your-vllm-host:8000 \
-  cost-peep                                                         # live
+  pocket-watching                                                         # live
 ```
 
 ### 4. Docker on any always-on box
 
 ```bash
-docker build -t cost-peep .
+docker build -t pocket-watching .
 docker run -d -p 3000:3000 --restart unless-stopped \
-  -e COST_PEEP_MODE=live \
+  -e POCKET_WATCH_MODE=live \
   -e VLLM_BASE_URL=http://your-vllm-host:8000 \
-  cost-peep
+  pocket-watching
 ```
 
 > A LAN-only cluster (like ours) is not reachable from a public cloud host.

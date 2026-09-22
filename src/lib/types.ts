@@ -1,5 +1,5 @@
 /**
- * Domain types for Cost Peep.
+ * Domain types for Pocket Watching.
  *
  * Everything the dashboard renders flows through these records — the metrics
  * collector produces them, the cost engine derives them, the UI consumes them.
