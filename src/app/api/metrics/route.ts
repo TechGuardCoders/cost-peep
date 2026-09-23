@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
+import path from "node:path";
 import { buildPayload, pushSnapshot, ensureData } from "@/lib/store";
 import { nextMockSnapshot } from "@/lib/metrics/mock";
 import { fetchLiveSnapshot, LiveSourceConfig } from "@/lib/metrics/live";
+import { tenantFeed, specFeed, sliceFeed, reliabilityFeed } from "@/lib/feeds";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +16,11 @@ export const dynamic = "force-dynamic";
  *
  * Live failures fall back to the last good snapshot; the payload reports its
  * source so the UI can show a stale/live badge honestly.
+ *
+ * Integration feeds (portfolio stack): tenant attribution from the Ball
+ * Knowledge gateway, spec-decode acceptance (Truffle), slice shares
+ * (Circuiter), reliability (Flunk). Each is best-effort: a down feed
+ * shows "no data", never breaks the dashboard.
  */
 export async function GET() {
   ensureData();
@@ -38,5 +45,18 @@ export async function GET() {
     pushSnapshot(nextMockSnapshot(null));
   }
 
-  return NextResponse.json(buildPayload());
+  // Integration feeds (best-effort, non-blocking)
+  const benchDir = path.resolve(process.cwd(), "benchmarks");
+  const bkUrl = process.env.BK_BASE_URL ?? "http://127.0.0.1:3100";
+  const [tenants] = await Promise.all([tenantFeed(bkUrl)]);
+
+  return NextResponse.json({
+    ...buildPayload(),
+    feeds: {
+      gatewayTenants: tenants,
+      spec: specFeed(benchDir),
+      slices: sliceFeed(benchDir),
+      reliability: reliabilityFeed(),
+    },
+  });
 }
