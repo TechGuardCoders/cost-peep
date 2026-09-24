@@ -135,73 +135,49 @@ html, body {
   letter-spacing: -0.03em;
 }
 
-/* ---------- googly eyes (peeping over a line under the title) ---------- */
+/* ---------- googly wallet (Pocket Watching masthead) ---------- */
 
-.peep-stage {
+/* Bigger stage than the old peep-line: the wallet is the identity. Fixed
+   colors in both themes - leather stays leather, eyes stay eyes. */
+.wallet-stage {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 0.4rem;
-  height: 58px; /* room for eyes above the line + hiding below */
-  overflow: hidden; /* they genuinely hide behind the line edge */
+  margin-top: 0.55rem;
+  width: 200px;
+  height: 120px;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.28));
 }
 
-/* The "wall" they peep over — skinny rectangle; eyes rise above its top edge */
-.peep-line {
+.wallet {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* eyes sit in the flap/slot area, above the snap, looking around */
+.wallet-eyes {
   position: absolute;
-  bottom: 26px;
+  top: 44px;               /* between flap and snap */
   left: 50%;
   transform: translateX(-50%);
-  width: 140px;
-  height: 5px;
-  background: var(--fg-muted);
-  opacity: 0.85;
-}
-
-/* Each peeper: two eyes grouped, sitting below the line, rising to peek.
-   Rest position fully below the 5px ledge (which sits at bottom:26px); the
-   peek keyframe lifts them so the eyes clear ABOVE the ledge's top edge. */
-.peeper {
-  position: absolute;
-  bottom: 0px;
   display: flex;
-  gap: 7px;
-  transition: transform 0.6s cubic-bezier(0.34, 1.3, 0.64, 1);
-  z-index: 0;
+  gap: 16px;
 }
 
-.peeper.left  { left: calc(50% - 46px); animation: peek-left 7s ease-in-out infinite; }
-.peeper.right { left: calc(50% + 14px); animation: peek-right 9s ease-in-out infinite; }
-
-/* hiding (below ledge) -> peeking (fully above ledge top edge) */
-@keyframes peek-left {
-  0%, 38%  { transform: translateY(0px); }    /* hidden: below the ledge */
-  48%, 78% { transform: translateY(-30px); }  /* peeking: eyes above ledge */
-  88%      { transform: translateY(-16px); }  /* start sinking back */
-  100%     { transform: translateY(0px); }
-}
-@keyframes peek-right {
-  0%, 48%  { transform: translateY(0px); }
-  58%, 82% { transform: translateY(-30px); }
-  90%      { transform: translateY(-18px); }
-  100%     { transform: translateY(0px); }
-}
-
-/* The eye itself: FIXED colors in both themes — white sclera, dark pupil,
+/* The eye: FIXED colors in both themes - white sclera, dark pupil,
    dark ring. Never inverts in dark mode (googly eyes are googly eyes). */
-.peeper .eye {
-  width: 15px;
-  height: 15px;
+.wallet-eyes .eye {
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   background: #ffffff;
-  border: 1.5px solid #1e293b;
+  border: 2px solid #1e293b;
   overflow: hidden;
   position: relative;
   pointer-events: auto;
+  box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.12);
 }
 
-.peeper .pupil {
+.wallet-eyes .pupil {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -214,19 +190,35 @@ html, body {
   will-change: transform;
 }
 
-/* idle glance while peeking (when title not hovered) */
+/* idle looking-around loop (when title not hovered): slow wander with
+   blinks - eyes drift left, hold, right, up, hold */
 @keyframes glance {
-  0%   { transform: translate(-50%, -50%) translate(2px, -1px); }
-  30%  { transform: translate(-50%, -50%) translate(-2px, 1px); }
-  60%  { transform: translate(-50%, -50%) translate(2px, 1px); }
-  100% { transform: translate(-50%, -50%) translate(2px, -1px); }
+  0%   { transform: translate(-50%, -50%) translate(4px, -2px); }
+  18%  { transform: translate(-50%, -50%) translate(4px, -2px); }
+  32%  { transform: translate(-50%, -50%) translate(-4px, 1px); }
+  50%  { transform: translate(-50%, -50%) translate(-4px, 1px); }
+  62%  { transform: translate(-50%, -50%) translate(3px, 3px); }
+  76%  { transform: translate(-50%, -50%) translate(-1px, -3px); }
+  100% { transform: translate(-50%, -50%) translate(4px, -2px); }
 }
 
-.peep-stage:not(:hover) .pupil {
-  animation: glance 3.2s ease-in-out infinite;
+.wallet-stage:not(:hover) .pupil {
+  animation: glance 5.2s ease-in-out infinite;
 }
-.peep-stage:not(:hover) .peeper.right .pupil {
-  animation-delay: -0.8s;
+.wallet-stage:not(:hover) .right-pupil {
+  animation-delay: -1.1s;   /* eyes out of phase: they look at each other sometimes */
+}
+
+/* occasional blink */
+@keyframes blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95%           { transform: scaleY(0.08); }
+}
+.wallet-eyes .eye {
+  animation: blink 4.7s ease-in-out infinite;
+}
+.wallet-eyes .eye:nth-child(2) {
+  animation-delay: 0.12s;
 }
 
 /* ---------- scrollbars ---------- */

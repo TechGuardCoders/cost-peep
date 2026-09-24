@@ -98,8 +98,9 @@ function dateFmt(ts: number): string {
 
 /* ---------------- title + watching eyes ---------------- */
 
-/** "POCKET WATCHING" wordmark; beneath it, two googly eyes peep over a line
- * (hiding -> peeking on a loop). Hover the stage: pupils track cursor. */
+/** "POCKET WATCHING" wordmark above a brown leather wallet whose googly
+ * eyes look around on a loop (static wallet, animated eyes). Hover the
+ * wallet: pupils track cursor. Colors are FIXED - identical in light/dark. */
 function WatchingTitle() {
   const stageRef = useRef<HTMLDivElement>(null);
 
@@ -132,22 +133,39 @@ function WatchingTitle() {
       className="flex flex-col items-center select-none"
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
-      title="Peek-a-boo."
+      title="It sees the spend."
     >
       <span className="display-font text-4xl md:text-5xl font-bold tracking-tight">
         POCKET WATCHING
       </span>
-      <div className="peep-stage w-64">
-        {/* the wall */}
-        <div className="peep-line" />
-        {/* left peeper: a pair of eyes */}
-        <div className="peeper left">
+      <div className="wallet-stage">
+        {/* the leather wallet */}
+        <svg className="wallet" viewBox="0 0 200 120" aria-hidden>
+          <defs>
+            <linearGradient id="leather" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#8b5a2b" />
+              <stop offset="55%" stopColor="#6f4420" />
+              <stop offset="100%" stopColor="#5a371a" />
+            </linearGradient>
+            <linearGradient id="leatherFlap" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#7a4d24" />
+              <stop offset="100%" stopColor="#5f3b1c" />
+            </linearGradient>
+          </defs>
+          {/* body */}
+          <rect x="14" y="34" width="172" height="76" rx="14" fill="url(#leather)" />
+          {/* stitching */}
+          <rect x="20" y="40" width="160" height="64" rx="10" fill="none"
+                stroke="#d9b382" strokeWidth="1.4" strokeDasharray="5 5" opacity="0.55" />
+          {/* flap */}
+          <rect x="14" y="34" width="172" height="30" rx="13" fill="url(#leatherFlap)" />
+          {/* snap button */}
+          <circle cx="100" cy="86" r="7" fill="#3f2712" />
+          <circle cx="100" cy="86" r="4.5" fill="#d9b382" opacity="0.85" />
+        </svg>
+        {/* the eyes, sitting in the wallet's card slot, looking around */}
+        <div className="wallet-eyes">
           <span className="eye"><span className="pupil left-pupil" /></span>
-          <span className="eye"><span className="pupil left-pupil" /></span>
-        </div>
-        {/* right peeper: a pair of eyes, out of phase */}
-        <div className="peeper right">
-          <span className="eye"><span className="pupil right-pupil" /></span>
           <span className="eye"><span className="pupil right-pupil" /></span>
         </div>
       </div>
