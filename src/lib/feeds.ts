@@ -76,7 +76,7 @@ export async function tenantFeed(bkUrl: string): Promise<TenantFeed[] | null> {
 /** Latest Truffle benchmark → spec-decode acceptance KPI. */
 export function specFeed(benchDir: string): SpecFeed {
   try {
-    const files = fs.readdirSync(benchDir).filter(f => f.startsWith("truffle_")).sort();
+    const files = fs.readdirSync(benchDir).filter(f => f.startsWith("green_zone_")).sort();
     if (files.length === 0) return { acceptanceRate: null, acceptedPerDraftCycle: null, measuredAt: null };
     const latest = JSON.parse(fs.readFileSync(path.join(benchDir, files.at(-1)!), "utf-8"));
     const windows = latest.windows ?? [];
