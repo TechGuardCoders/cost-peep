@@ -3,7 +3,7 @@
  *
  * Pulls from (all local, all read-only):
  * - Ball Knowledge gateway :3100/audit  → per-tenant token attribution
- * - Truffle benchmarks                  → accepted-token cost KPI
+ * - Green-Zone benchmarks                  → accepted-token cost KPI
  * - Circuiter benchmarks                → per-slice cost model
  * - Flunk drill results                 → reliability panel (RTO/RPO)
  *
@@ -73,7 +73,7 @@ export async function tenantFeed(bkUrl: string): Promise<TenantFeed[] | null> {
   }));
 }
 
-/** Latest Truffle benchmark → spec-decode acceptance KPI. */
+/** Latest Green-Zone benchmark → spec-decode acceptance KPI. */
 export function specFeed(benchDir: string): SpecFeed {
   try {
     const files = fs.readdirSync(benchDir).filter(f => f.startsWith("green_zone_")).sort();

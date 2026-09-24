@@ -18,7 +18,7 @@ export const dynamic = "force-dynamic";
  * source so the UI can show a stale/live badge honestly.
  *
  * Integration feeds (portfolio stack): tenant attribution from the Ball
- * Knowledge gateway, spec-decode acceptance (Truffle), slice shares
+ * Knowledge gateway, spec-decode acceptance (Green-Zone), slice shares
  * (Circuiter), reliability (Flunk). Each is best-effort: a down feed
  * shows "no data", never breaks the dashboard.
  */
